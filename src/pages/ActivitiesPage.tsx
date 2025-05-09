@@ -17,6 +17,8 @@ const ActivitiesPage = () => {
   const [activityToDelete, setActivityToDelete] = useState<string | null>(null);
   const [activityToEdit, setActivityToEdit] = useState<Activity | null>(null);
   const [deleteActivity] = useDeleteActivityMutation();
+  const [sortBy, setSortBy] = useState<string>("title");
+  const [filterText, setFilterText] = useState<string>("");
 
   const handleDeleteClick = (activityId: string) => {
     setActivityToDelete(activityId);
@@ -39,6 +41,29 @@ const ActivitiesPage = () => {
     }
   };
 
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(e.target.value);
+  };
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterText(e.target.value);
+  };
+
+  const filteredActivities = activities.filter((activity) =>
+    activity.title.toLowerCase().includes(filterText.toLowerCase())
+  );
+
+  const sortedActivities = filteredActivities.sort((a, b) => {
+    if (sortBy === "title") {
+      return a.title.localeCompare(b.title);
+    } else if (sortBy === "date") {
+      return (
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      );
+    }
+    return 0;
+  });
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -59,6 +84,25 @@ const ActivitiesPage = () => {
         >
           Voeg activiteit toe
         </button>
+      </div>
+
+      <div className="mb-4 flex items-center gap-4">
+        <select
+          value={sortBy}
+          onChange={handleSortChange}
+          className="bg-white border border-gray-300 rounded px-4 py-2"
+        >
+          <option value="title">Sorteren op Titel</option>
+          <option value="date">Sorteren op Nieuwste</option>
+        </select>
+
+        <input
+          type="text"
+          value={filterText}
+          onChange={handleFilterChange}
+          placeholder="Zoek op titel..."
+          className="bg-white border border-gray-300 rounded px-4 py-2 w-full md:w-1/3"
+        />
       </div>
 
       <ActivityModal
@@ -84,11 +128,11 @@ const ActivitiesPage = () => {
         }
       />
 
-      {activities.length === 0 ? (
+      {sortedActivities.length === 0 ? (
         <p className="text-gray-500">Geen activiteiten gevonden.</p>
       ) : (
         <ul className="space-y-4">
-          {activities.map((activity) => (
+          {sortedActivities.map((activity) => (
             <li
               key={activity.id}
               className="bg-white p-4 rounded-lg shadow-md border border-gray-100"
@@ -120,9 +164,12 @@ const ActivitiesPage = () => {
                 />
               )}
               <p className="text-gray-600 mt-2">{activity.description}</p>
-              <p className="text-sm text-gray-400 mt-1">
-                📍 {activity.location?.latitude}, {activity.location?.longitude}
-              </p>
+              {activity.location && (
+                <p className="text-sm text-gray-400 mt-1">
+                  📍 {activity.location?.latitude},{" "}
+                  {activity.location?.longitude}
+                </p>
+              )}
             </li>
           ))}
         </ul>
