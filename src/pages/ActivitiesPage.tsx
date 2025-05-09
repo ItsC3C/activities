@@ -8,6 +8,7 @@ import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import EditModal from "../components/EditModal";
 import { MessageCircleMore, PencilIcon, Trash2Icon } from "lucide-react";
 import { Activity } from "../types/Activity";
+import CommentsModal from "../components/CommentsModal";
 
 const ActivitiesPage = () => {
   const { data: activities = [], isLoading } = useGetActivitiesQuery();
@@ -20,6 +21,10 @@ const ActivitiesPage = () => {
   const [sortBy, setSortBy] = useState<string>("title");
   const [filterText, setFilterText] = useState<string>("");
   const [isDeleteAll, setIsDeleteAll] = useState(false);
+  const [isCommentsModalOpen, setIsCommentsModalOpen] = useState(false);
+  const [selectedActivityComments, setSelectedActivityComments] = useState<
+    Comment[]
+  >([]);
 
   const handleDeleteClick = (activityId: string) => {
     setActivityToDelete(activityId);
@@ -146,6 +151,12 @@ const ActivitiesPage = () => {
         isDeleteAll={isDeleteAll}
       />
 
+      <CommentsModal
+        isOpen={isCommentsModalOpen}
+        onClose={() => setIsCommentsModalOpen(false)}
+        comments={selectedActivityComments}
+      />
+
       {sortedActivities.length === 0 ? (
         <p className="text-gray-500">Geen activiteiten gevonden.</p>
       ) : (
@@ -172,7 +183,13 @@ const ActivitiesPage = () => {
                   >
                     <PencilIcon className="w-5 h-5 inline-block mr-1" />
                   </button>
-                  <button className="mt-4 text-green-500 hover:text-green-700">
+                  <button
+                    onClick={() => {
+                      setSelectedActivityComments(activity.comments || []);
+                      setIsCommentsModalOpen(true);
+                    }}
+                    className="mt-4 text-green-500 hover:text-green-700"
+                  >
                     <MessageCircleMore className="w-5 h-5 inline-block mr-1" />
                   </button>
                 </div>

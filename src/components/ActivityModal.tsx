@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAddActivityMutation } from "../redux/activitiesApi";
+import { X } from "lucide-react";
 
 interface ActivityModalProps {
   isOpen: boolean;
@@ -40,7 +41,7 @@ const ActivityModal: React.FC<ActivityModalProps> = ({ isOpen, onClose }) => {
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-500 hover:text-black text-2xl"
         >
-          &times;
+          <X className="w-5 h-5 mt-2.5 mr-2.5" />
         </button>
         <h2 className="text-xl font-bold mb-4">Nieuwe activiteit</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

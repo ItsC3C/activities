@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useUpdateActivityMutation } from "../redux/activitiesApi";
 import { Activity } from "../types/Activity";
+import { X } from "lucide-react";
 
 interface EditModalProps {
   isOpen: boolean;
@@ -64,7 +65,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, activity }) => {
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-500 hover:text-black text-2xl"
         >
-          &times;
+          <X className="w-5 h-5 mt-3.5 mr-3.5" />
         </button>
         <h2 className="text-xl font-bold mb-4">Bewerk activiteit</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
