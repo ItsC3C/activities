@@ -81,17 +81,9 @@ const ActivitiesPage = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-10">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-semibold mb-6">Activiteiten</h1>
-        <button
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-          onClick={() => setIsModalOpen(true)}
-        >
-          Voeg activiteit toe
-        </button>
-      </div>
+      <h1 className="text-3xl font-semibold mb-6">Activiteiten</h1>
 
-      <div className="mb-4 flex items-center gap-4">
+      <div className="flex items-center gap-4 mb-6">
         <select
           value={sortBy}
           onChange={handleSortChange}
@@ -117,6 +109,13 @@ const ActivitiesPage = () => {
           }}
         >
           Verwijder alles
+        </button>
+
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+          onClick={() => setIsModalOpen(true)}
+        >
+          Voeg activiteit toe
         </button>
       </div>
 
