@@ -6,7 +6,7 @@ import {
 import ActivityModal from "../components/ActivityModal";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import EditModal from "../components/EditModal";
-import { PencilIcon, Trash2Icon } from "lucide-react";
+import { MessageCircleMore, PencilIcon, Trash2Icon } from "lucide-react";
 import { Activity } from "../types/Activity";
 
 const ActivitiesPage = () => {
@@ -171,6 +171,9 @@ const ActivitiesPage = () => {
                     className="mt-4 text-blue-500 hover:text-blue-700"
                   >
                     <PencilIcon className="w-5 h-5 inline-block mr-1" />
+                  </button>
+                  <button className="mt-4 text-green-500 hover:text-green-700">
+                    <MessageCircleMore className="w-5 h-5 inline-block mr-1" />
                   </button>
                 </div>
               </div>
