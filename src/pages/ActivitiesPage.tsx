@@ -19,6 +19,7 @@ const ActivitiesPage = () => {
   const [deleteActivity] = useDeleteActivityMutation();
   const [sortBy, setSortBy] = useState<string>("title");
   const [filterText, setFilterText] = useState<string>("");
+  const [isDeleteAll, setIsDeleteAll] = useState(false);
 
   const handleDeleteClick = (activityId: string) => {
     setActivityToDelete(activityId);
@@ -31,13 +32,17 @@ const ActivitiesPage = () => {
   };
 
   const handleConfirmDelete = async () => {
-    if (activityToDelete) {
-      try {
+    try {
+      if (isDeleteAll) {
+        await Promise.all(activities.map((a) => deleteActivity(a.id).unwrap()));
+      } else if (activityToDelete) {
         await deleteActivity(activityToDelete).unwrap();
-        setIsDeleteModalOpen(false);
-      } catch (error) {
-        console.error("Failed to delete activity:", error);
       }
+      setIsDeleteModalOpen(false);
+      setActivityToDelete(null);
+      setIsDeleteAll(false);
+    } catch (error) {
+      console.error("Verwijderen mislukt:", error);
     }
   };
 
@@ -103,6 +108,16 @@ const ActivitiesPage = () => {
           placeholder="Zoek op titel..."
           className="bg-white border border-gray-300 rounded px-4 py-2 w-full md:w-1/3"
         />
+
+        <button
+          className="bg-red-500 text-white px-4 py-2 rounded"
+          onClick={() => {
+            setIsDeleteAll(true);
+            setIsDeleteModalOpen(true);
+          }}
+        >
+          Verwijder alles
+        </button>
       </div>
 
       <ActivityModal
@@ -120,12 +135,16 @@ const ActivitiesPage = () => {
 
       <ConfirmDeleteModal
         isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setIsDeleteAll(false);
+        }}
         onConfirm={handleConfirmDelete}
         activityTitle={
           activities.find((activity) => activity.id === activityToDelete)
             ?.title || ""
         }
+        isDeleteAll={isDeleteAll}
       />
 
       {sortedActivities.length === 0 ? (
